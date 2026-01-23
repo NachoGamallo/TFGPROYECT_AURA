@@ -1,14 +1,13 @@
 -- =========================
---DATABASE STRUCTURE.
+-- DATABASE
 -- =========================
-
 CREATE DATABASE "AuraDatabase"
     WITH
     OWNER = postgres
     ENCODING = 'UTF8'
     LOCALE_PROVIDER = 'libc'
     CONNECTION LIMIT = -1
-    IS_TEMPLATE = False;
+    IS_TEMPLATE = FALSE;
 
 -- =========================
 -- EXTENSIONS
@@ -16,12 +15,27 @@ CREATE DATABASE "AuraDatabase"
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =========================
--- ENUMS
+-- ENUMS (BASE)
 -- =========================
 CREATE TYPE user_status AS ENUM ('ACTIVE', 'BLOCKED');
 CREATE TYPE user_level AS ENUM ('BEGINNER', 'INTERMEDIATE', 'ADVANCED');
 CREATE TYPE user_gender AS ENUM ('MALE', 'FEMALE', 'OTHER');
 CREATE TYPE exercise_type AS ENUM ('STRENGTH', 'CARDIO');
+
+-- =========================
+-- ENUMS (FITNESS EXTENSION)
+-- =========================
+CREATE TYPE user_goal_enum AS ENUM ('FAT_LOSS', 'MUSCLE_GAIN', 'RECOMPOSITION');
+
+CREATE TYPE user_phase_enum AS ENUM ('CUTTING', 'BULKING', 'MAINTENANCE');
+
+CREATE TYPE activity_level_enum AS ENUM (
+    'SEDENTARY',
+    'LIGHT',
+    'MODERATE',
+    'HIGH',
+    'ATHLETE'
+);
 
 -- =========================
 -- USERS & SECURITY
@@ -31,6 +45,7 @@ CREATE TABLE app_user (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     status user_status NOT NULL DEFAULT 'ACTIVE',
+    profile_image_url TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP
@@ -53,10 +68,16 @@ CREATE TABLE user_role (
 CREATE TABLE physical_profile (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID UNIQUE REFERENCES app_user(id) ON DELETE CASCADE,
-    height_cm INT,
+    age INT CHECK (age > 0 AND age < 120),
+    height_cm INT CHECK (height_cm > 0),
     gender user_gender,
     level user_level NOT NULL DEFAULT 'BEGINNER',
-    main_goal VARCHAR(100)
+    activity_level activity_level_enum NOT NULL DEFAULT 'MODERATE',
+    goal user_goal_enum,
+    phase user_phase_enum,
+    main_goal VARCHAR(100),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE body_record (
@@ -149,6 +170,19 @@ CREATE TABLE food_record (
 );
 
 -- =========================
+-- USER MACROS (CALCULATED)
+-- =========================
+CREATE TABLE user_macro (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES app_user(id) ON DELETE CASCADE,
+    calories INT NOT NULL CHECK (calories > 0),
+    protein_grams INT NOT NULL CHECK (protein_grams >= 0),
+    carbs_grams INT NOT NULL CHECK (carbs_grams >= 0),
+    fat_grams INT NOT NULL CHECK (fat_grams >= 0),
+    calculated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =========================
 -- GAMIFICATION
 -- =========================
 CREATE TABLE achievement (
@@ -174,6 +208,7 @@ CREATE TABLE coach_client (
     client_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
     start_date DATE NOT NULL,
     status VARCHAR(50),
+    deleted_at TIMESTAMP,
     PRIMARY KEY (coach_id, client_id)
 );
 
