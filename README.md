@@ -12,7 +12,7 @@
 - 📈 Visualización de gráficos de evolución por ejercicio y grupo muscular.
 - 💬 Recomendaciones automáticas basadas en los resultados.
 - ⚠️ Sistema de logs locales ante errores (seguridad y estabilidad).
-- 🧠 Arquitectura escalable (Frontend Flutter + Backend Python/FastAPI).
+- 🧠 Arquitectura escalable (Frontend Flutter + Backend  Java/Spreen Boot).
 
 ---
 
