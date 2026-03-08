@@ -47,7 +47,7 @@ CREATE TABLE role ( --HECHO
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE user_role ( --HECHO PERO SIN DTO
+CREATE TABLE user_role ( --HECHO PERO SIN ENTITY
     user_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
     role_id UUID REFERENCES role(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, role_id)
@@ -147,7 +147,7 @@ CREATE TABLE routine ( -- HECHO
     deleted_at TIMESTAMP
 );
 
-CREATE TABLE routine_exercise ( -- HECHO (EN BBDD)
+CREATE TABLE routine_exercise ( -- HECHO    
     routine_id UUID REFERENCES routine(id) ON DELETE CASCADE,
     exercise_id UUID REFERENCES exercise(id) ON DELETE CASCADE,
     position INT NOT NULL, --Orden del ejercicio
@@ -160,7 +160,7 @@ CREATE TABLE routine_exercise ( -- HECHO (EN BBDD)
 -- =========================
 -- TRAINING SESSIONS
 -- =========================
-CREATE TABLE training_session ( --HECHO (EN BBDD) , 
+CREATE TABLE training_session ( --HECHO 
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
     routine_id UUID REFERENCES routine(id), --Nulo si es un entreno improvisado.
@@ -169,7 +169,7 @@ CREATE TABLE training_session ( --HECHO (EN BBDD) ,
     deleted_at TIMESTAMP
 );
 
-CREATE TABLE exercise_record ( --HECHO (EN BBDD) , series del usuario
+CREATE TABLE exercise_record ( --HECHO
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     session_id UUID REFERENCES training_session(id) ON DELETE CASCADE,
     exercise_id UUID REFERENCES exercise(id),

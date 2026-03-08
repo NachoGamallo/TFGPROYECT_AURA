@@ -25,7 +25,7 @@ public class Exercise {
     private String description;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "exercise_type" , nullable = false)
+    @Column(name = "type")
     private ExerciseType exerciseType;
 
     private String equipment;
@@ -44,10 +44,11 @@ public class Exercise {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "exercice" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exercise" , cascade = CascadeType.ALL)
     private List<ExerciseMuscle> exerciseMuscles;
 
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL)
+    @OrderBy("stepNumber ASC")
     private List<ExerciseInstruction> instructions;
 
 }

@@ -7,7 +7,8 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "exercise_instruction")
+@Table(name = "exercise_instruction",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"exercise_id", "step_number"}))
 public class ExerciseInstruction {
 
     @Id
@@ -15,10 +16,10 @@ public class ExerciseInstruction {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "exercise_id", unique = true)
+    @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
-    @Column(nullable = false, unique = true, name = "step_number")
+    @Column(nullable = false, name = "step_number")
     private Integer stepNumber;
 
     @Column(name = "instruction_text", nullable = false)
