@@ -129,7 +129,10 @@ CREATE TABLE exercise_instruction( --HECHO
     exercise_id UUID REFERENCES exercise(id) ON DELETE CASCADE,
     step_number INT NOT NULL,
     instruction_text TEXT NOT NULL,
-    UNIQUE (exercise_id , step_number) --Para que no hayan pasos repetidos.
+    UNIQUE (exercise_id , step_number), --Para que no hayan pasos repetidos.
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP,
+    deleted_at TIMESTAMP
 );
 
 -- =========================
