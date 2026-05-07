@@ -1,5 +1,8 @@
 package com.example.Aura.services;
 
+import com.example.Aura.dto.request.ChangeUserEmailRequestDTO;
+import com.example.Aura.dto.request.ChangeUserNameRequestDTO;
+import com.example.Aura.dto.request.ChangeUserPasswordRequestDTO;
 import com.example.Aura.dto.response.HomeResponseDTO;
 import com.example.Aura.dto.response.UserDataDTO;
 import com.example.Aura.model.AppUser;
@@ -10,6 +13,8 @@ import com.example.Aura.repository.PhysicalProfileRepository;
 import com.example.Aura.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -67,5 +72,4 @@ public class UserService {
         return response;
 
     }
-
 }
