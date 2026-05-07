@@ -1,6 +1,7 @@
 package com.example.Aura.controller.auth;
 
 import com.example.Aura.dto.response.HomeResponseDTO;
+import com.example.Aura.dto.response.UserDataDTO;
 import com.example.Aura.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,14 @@ public class UserController {
 
         String userEmail = authentication.getName();
         return ResponseEntity.ok(userService.getHomeData(userEmail));
+
+    }
+
+    @GetMapping("/data")
+    public ResponseEntity<UserDataDTO> getUserData(Authentication authentication){
+
+        String userEmail = authentication.getName();
+        return ResponseEntity.ok(userService.getUserData(userEmail));
 
     }
 

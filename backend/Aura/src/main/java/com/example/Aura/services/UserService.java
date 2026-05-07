@@ -1,6 +1,7 @@
 package com.example.Aura.services;
 
 import com.example.Aura.dto.response.HomeResponseDTO;
+import com.example.Aura.dto.response.UserDataDTO;
 import com.example.Aura.model.AppUser;
 import com.example.Aura.model.NutritionPlan;
 import com.example.Aura.model.PhysicalProfile;
@@ -45,6 +46,23 @@ public class UserService {
         response.setCompletedWorkOuts(0);
         response.setBurnedCalories(0);
         response.setUnlockedAchievements(0);
+
+        return response;
+
+    }
+
+    public UserDataDTO getUserData(String email){
+
+        //Buscamos el usuario y sus datos.
+        AppUser user = userRepo.findAppUserByEmail(email).orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
+
+        UserDataDTO response = new UserDataDTO();
+
+        //Datos que pasaremos.
+        response.setId(user.getId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        response.setImageURL(user.getImage());
 
         return response;
 
