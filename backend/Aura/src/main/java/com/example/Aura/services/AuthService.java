@@ -52,6 +52,8 @@ public class AuthService {
 
         }
 
+        if (user.getDeletedAt() != null) throw new RuntimeException("Usuario marcado como borrado");
+
         //3. Si es correcto generamos el token.
         return jwtService.generateToken(user.getEmail());
 

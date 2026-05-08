@@ -1,6 +1,7 @@
 package com.example.Aura.controller.auth;
 
 import com.example.Aura.dto.request.ChangeUserEmailRequestDTO;
+import com.example.Aura.dto.request.ChangeUserImageRequestDTO;
 import com.example.Aura.dto.request.ChangeUserNameRequestDTO;
 import com.example.Aura.dto.request.ChangeUserPasswordRequestDTO;
 import com.example.Aura.dto.response.HomeResponseDTO;
@@ -53,5 +54,19 @@ public class UserController {
         return ResponseEntity.ok("Contraseña actualizado correctamente");
     }
     //End update of the 07-05
+
+    //Controller to change user image 08/05 15:52
+    @PatchMapping("/change-img")
+    public ResponseEntity<String> changeImg(@RequestBody ChangeUserImageRequestDTO requestDTO){
+        userService.updateUserImage(requestDTO);
+        return ResponseEntity.ok("Imagen actualizada correctamente");
+    }
+
+    //Controller to delete the user
+    @PatchMapping("/delete")
+    public ResponseEntity<String> deleteUser(){
+        userService.deleteUser();
+        return ResponseEntity.ok("Usuario eliminado correctamente");
+    }
 
 }

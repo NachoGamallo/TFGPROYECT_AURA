@@ -1,6 +1,7 @@
 package com.example.Aura.services;
 
 import com.example.Aura.dto.request.ChangeUserEmailRequestDTO;
+import com.example.Aura.dto.request.ChangeUserImageRequestDTO;
 import com.example.Aura.dto.request.ChangeUserNameRequestDTO;
 import com.example.Aura.dto.request.ChangeUserPasswordRequestDTO;
 import com.example.Aura.dto.response.HomeResponseDTO;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -117,6 +119,28 @@ public class UserService {
 
         //2.We change the password.
         user.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
+        userRepo.save(user);
+
+    }
+
+    //Change the user profile Image - 08/05/2026 - 15:41.
+    public void updateUserImage(ChangeUserImageRequestDTO requestDTO){
+
+        AppUser user = getAuthenticatedUser();
+
+        //1.We change the image of the user.
+        user.setImage(requestDTO.getImg());
+        userRepo.save(user);
+
+    }
+
+    //Delete the user - 08/05/2026 15:49.
+    public void deleteUser(){
+
+        AppUser user = getAuthenticatedUser();
+
+        //1. We mark the user as delete (deleted_at)
+        user.setDeletedAt(LocalDateTime.now());
         userRepo.save(user);
 
     }
