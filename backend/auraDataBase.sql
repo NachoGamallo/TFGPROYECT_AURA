@@ -238,11 +238,72 @@ CREATE TABLE coach_client (
 -- =========================
 INSERT INTO role (name) VALUES ('USER'), ('COACH'), ('ADMIN');
 
-INSERT INTO muscle_group (name) VALUES
-('Chest'),
-('Back'),
-('Legs'),
-('Shoulders'),
-('Biceps'),
-('Triceps'),
-('Core');
+INSERT INTO muscle_group (name) VALUES 
+('Pecho'), ('Espalda'), ('Hombros'), ('Bíceps'), 
+('Tríceps'), ('Cuádriceps'), ('Isquiotibiales'), 
+('Glúteos'), ('Gemelos'), ('Core'), ('Antebrazo'), 
+('Trapecio'), ('Lumbar');
+
+INSERT INTO exercise (id, name, description, type, equipment) VALUES 
+(gen_random_uuid(), 'Press de Banca', 'Empuje horizontal con barra para pectoral.', 'STRENGTH', 'Barra'),
+(gen_random_uuid(), 'Dominadas', 'Tracción vertical con peso corporal.', 'CALISTHENICS', 'Barra de Dominadas'),
+(gen_random_uuid(), 'Sentadilla con Barra', 'Ejercicio multiarticular de pierna.', 'STRENGTH', 'Rack y Barra'),
+(gen_random_uuid(), 'Flexiones de Brazos', 'Empuje de pecho con peso corporal.', 'CALISTHENICS', 'Ninguno'),
+(gen_random_uuid(), 'Burpees', 'Ejercicio de alta intensidad metabólica.', ' CARDIO', 'Ninguno'); -- Nota: Espacio incluido según tu ENUM
+
+--CONEXIÓN GRUPO MUSCULAR x EJERCICIO
+-- 1. Press de Banca (Principal: Pecho | Secundario: Tríceps)
+INSERT INTO exercise_muscle (exercise_id, muscle_group_id, is_primary) VALUES 
+((SELECT id FROM exercise WHERE name = 'Press de Banca'), (SELECT id FROM muscle_group WHERE name = 'Pecho'), TRUE),
+((SELECT id FROM exercise WHERE name = 'Press de Banca'), (SELECT id FROM muscle_group WHERE name = 'Tríceps'), FALSE);
+
+-- 2. Dominadas (Principal: Espalda | Secundario: Bíceps)
+INSERT INTO exercise_muscle (exercise_id, muscle_group_id, is_primary) VALUES 
+((SELECT id FROM exercise WHERE name = 'Dominadas'), (SELECT id FROM muscle_group WHERE name = 'Espalda'), TRUE),
+((SELECT id FROM exercise WHERE name = 'Dominadas'), (SELECT id FROM muscle_group WHERE name = 'Bíceps'), FALSE);
+
+-- 3. Sentadilla (Principal: Cuádriceps | Secundario: Glúteos)
+INSERT INTO exercise_muscle (exercise_id, muscle_group_id, is_primary) VALUES 
+((SELECT id FROM exercise WHERE name = 'Sentadilla con Barra'), (SELECT id FROM muscle_group WHERE name = 'Cuádriceps'), TRUE),
+((SELECT id FROM exercise WHERE name = 'Sentadilla con Barra'), (SELECT id FROM muscle_group WHERE name = 'Glúteos'), FALSE);
+
+-- 4. Flexiones (Principal: Pecho | Secundario: Hombros)
+INSERT INTO exercise_muscle (exercise_id, muscle_group_id, is_primary) VALUES 
+((SELECT id FROM exercise WHERE name = 'Flexiones de Brazos'), (SELECT id FROM muscle_group WHERE name = 'Pecho'), TRUE),
+((SELECT id FROM exercise WHERE name = 'Flexiones de Brazos'), (SELECT id FROM muscle_group WHERE name = 'Hombros'), FALSE);
+
+-- 5. Burpees (Principal: Core | Secundario: Cuádriceps)
+INSERT INTO exercise_muscle (exercise_id, muscle_group_id, is_primary) VALUES 
+((SELECT id FROM exercise WHERE name = 'Burpees'), (SELECT id FROM muscle_group WHERE name = 'Core'), TRUE),
+((SELECT id FROM exercise WHERE name = 'Burpees'), (SELECT id FROM muscle_group WHERE name = 'Cuádriceps'), FALSE);
+
+--PASOS EJERCICIOS
+-- Instrucciones para Press de Banca
+INSERT INTO exercise_instruction (exercise_id, step_number, instruction_text) VALUES 
+((SELECT id FROM exercise WHERE name = 'Press de Banca'), 1, 'Túmbate en el banco y agarra la barra con una anchura superior a los hombros.'),
+((SELECT id FROM exercise WHERE name = 'Press de Banca'), 2, 'Baja la barra al pecho de forma controlada.'),
+((SELECT id FROM exercise WHERE name = 'Press de Banca'), 3, 'Extiende los codos para subir la barra.');
+
+-- Instrucciones para Dominadas
+INSERT INTO exercise_instruction (exercise_id, step_number, instruction_text) VALUES 
+((SELECT id FROM exercise WHERE name = 'Dominadas'), 1, 'Sujétate a la barra con las palmas hacia adelante.'),
+((SELECT id FROM exercise WHERE name = 'Dominadas'), 2, 'Tira de tu cuerpo hacia arriba hasta que la barbilla pase la barra.'),
+((SELECT id FROM exercise WHERE name = 'Dominadas'), 3, 'Baja lentamente hasta la posición inicial.');
+
+-- Instrucciones para Sentadilla
+INSERT INTO exercise_instruction (exercise_id, step_number, instruction_text) VALUES 
+((SELECT id FROM exercise WHERE name = 'Sentadilla con Barra'), 1, 'Coloca la barra tras la nuca sobre los trapecios.'),
+((SELECT id FROM exercise WHERE name = 'Sentadilla con Barra'), 2, 'Baja la cadera rompiendo el paralelo de las rodillas.'),
+((SELECT id FROM exercise WHERE name = 'Sentadilla con Barra'), 3, 'Sube con fuerza empujando desde el talón.');
+
+-- Instrucciones para Flexiones
+INSERT INTO exercise_instruction (exercise_id, step_number, instruction_text) VALUES 
+((SELECT id FROM exercise WHERE name = 'Flexiones de Brazos'), 1, 'Coloca las manos en el suelo a la anchura de hombros.'),
+((SELECT id FROM exercise WHERE name = 'Flexiones de Brazos'), 2, 'Baja el pecho casi hasta tocar el suelo.'),
+((SELECT id FROM exercise WHERE name = 'Flexiones de Brazos'), 3, 'Empuja para volver a la posición de plancha.');
+
+-- Instrucciones para Burpees
+INSERT INTO exercise_instruction (exercise_id, step_number, instruction_text) VALUES 
+((SELECT id FROM exercise WHERE name = 'Burpees'), 1, 'Desde posición de pie, baja a hacer una flexión.'),
+((SELECT id FROM exercise WHERE name = 'Burpees'), 2, 'Recoge las piernas explosivamente hacia el pecho.'),
+((SELECT id FROM exercise WHERE name = 'Burpees'), 3, 'Salta verticalmente con las manos hacia arriba.');
