@@ -12,6 +12,8 @@ import com.example.Aura.repository.NutritionPlanRepository;
 import com.example.Aura.repository.PhysicalProfileRepository;
 import com.example.Aura.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -27,6 +29,8 @@ public class UserService {
 
     @Autowired
     private NutritionPlanRepository nutritionPlanRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public HomeResponseDTO getHomeData(String email){
 
@@ -72,4 +76,49 @@ public class UserService {
         return response;
 
     }
+
+    //Added the 07-05 6:22 - Validation structure and update of user name,email and password.
+    private AppUser getAuthenticatedUser(){
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepo.findAppUserByEmail(email).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    }
+
+    public void updateName(ChangeUserNameRequestDTO requestDTO){
+
+        AppUser user = getAuthenticatedUser();
+
+        //1. We change the name.
+        user.setName(requestDTO.getName());
+        userRepo.save(user);
+
+    }
+
+    public void updateEmail(ChangeUserEmailRequestDTO requestDTO){
+
+        AppUser user = getAuthenticatedUser();
+
+        //1.We check that the email is not used by other user
+        if (userRepo.existsAppUserByEmail(requestDTO.getEmail())) throw new RuntimeException("El email ya esta registrado");
+
+        //2.We change the email.
+        user.setEmail(requestDTO.getEmail());
+        userRepo.save(user);
+
+    }
+
+    public void updatePassword(ChangeUserPasswordRequestDTO requestDTO){
+
+        AppUser user = getAuthenticatedUser();
+
+        //1.we verify that the older password is the same.
+        if (!passwordEncoder.matches(requestDTO.getOldPassword(), user.getPassword())) throw new RuntimeException("La contraseña actual es incorrecta");
+
+        //2.We change the password.
+        user.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
+        userRepo.save(user);
+
+    }
+
 }

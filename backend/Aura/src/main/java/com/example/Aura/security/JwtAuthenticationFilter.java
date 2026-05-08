@@ -25,6 +25,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
+        System.out.println("--- DEBUG AURA ---");
+        System.out.println("Metodo: " + request.getMethod());
+        System.out.println("URL: " + request.getRequestURI());
+        System.out.println("Header Authorization: " + authHeader);
+
         final String jwt;
         final String userEmail;
 

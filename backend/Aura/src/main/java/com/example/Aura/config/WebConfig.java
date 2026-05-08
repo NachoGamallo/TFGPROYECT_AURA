@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addMapping("/**")//Permitir todos los endPoints
                 .allowedOrigins("*")//Permitir cualquier origen (FlutterFlow)
-                .allowedMethods("POST","GET", "PUT", "DELETE", "PATCH")
+                .allowedMethods("POST","GET", "PUT", "DELETE","PATCH", "OPTIONS")
                 .allowedHeaders("*");
 
     }

@@ -7,7 +7,6 @@ import java.util.UUID;
 @Data
 public class ChangeUserEmailRequestDTO {
 
-    private UUID id;
     private String email;
 
 }
