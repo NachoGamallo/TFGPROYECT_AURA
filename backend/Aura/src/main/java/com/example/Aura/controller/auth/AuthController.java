@@ -4,6 +4,7 @@ import com.example.Aura.dto.request.LogInRequestDTO;
 import com.example.Aura.dto.request.RegisterRequestDTO;
 import com.example.Aura.dto.response.AuthResponseDTO;
 import com.example.Aura.services.AuthService;
+import com.example.Aura.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

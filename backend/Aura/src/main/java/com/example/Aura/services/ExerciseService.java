@@ -53,6 +53,7 @@ public class ExerciseService {
     }
 
     private ExerciseDetailsDTO convertToDetailDTO(Exercise exercise) {
+
         ExerciseDetailsDTO dto = new ExerciseDetailsDTO();
         dto.setId(exercise.getId());
         dto.setName(exercise.getName());
