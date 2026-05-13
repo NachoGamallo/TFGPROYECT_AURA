@@ -58,7 +58,7 @@ public class RoutineService {
             re.setPosition(exDto.getPosition());
             re.setSets(exDto.getSets());
             re.setReps(exDto.getReps());
-            re.setRestSeconds(re.getRestSeconds());
+            re.setRestSeconds(exDto.getRestSeconds());
             re.setInitialWeight(exDto.getInitialWeight());
 
             routineExerciseRepo.save(re);
