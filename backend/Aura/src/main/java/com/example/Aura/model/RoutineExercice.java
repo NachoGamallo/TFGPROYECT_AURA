@@ -34,4 +34,7 @@ public class RoutineExercice {
     @Column(name = "rest_seconds")
     private int rest = 60;
 
+    @Column(name = "initial_weight")
+    private Double initialWeight = 0.0;
+
 }

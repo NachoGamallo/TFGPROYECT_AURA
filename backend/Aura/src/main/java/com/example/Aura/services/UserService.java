@@ -80,7 +80,7 @@ public class UserService {
     }
 
     //Added the 07-05 6:22 - Validation structure and update of user name,email and password.
-    private AppUser getAuthenticatedUser(){
+    public AppUser getAuthenticatedUser(){
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepo.findAppUserByEmail(email).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
