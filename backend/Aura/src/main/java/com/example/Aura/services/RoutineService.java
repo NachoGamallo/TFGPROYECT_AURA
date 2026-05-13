@@ -34,7 +34,7 @@ public class RoutineService {
     public void createRoutine(CreateRoutineRequestDTO requestDTO){
 
         AppUser creator = service.getAuthenticatedUser();
-        PhysicalProfile profile = physicalProfileRepository.getReferenceById(creator.getId());
+        PhysicalProfile profile = physicalProfileRepository.findByAppUser(creator).orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
 
         Routine routine = new Routine();
         routine.setCreator(creator);
@@ -58,7 +58,7 @@ public class RoutineService {
             re.setPosition(exDto.getPosition());
             re.setSets(exDto.getSets());
             re.setReps(exDto.getReps());
-            re.setRest(re.getRest());
+            re.setRestSeconds(re.getRestSeconds());
             re.setInitialWeight(exDto.getInitialWeight());
 
             routineExerciseRepo.save(re);

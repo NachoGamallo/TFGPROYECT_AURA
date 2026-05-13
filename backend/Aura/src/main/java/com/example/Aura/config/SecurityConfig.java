@@ -39,6 +39,7 @@ public class SecurityConfig {
                         // Endpoints públicos corregidos (todos empiezan por /)
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/exercises", "/api/exercises/**").permitAll()
+                        .requestMatchers("/api/routines/" , "/api/routines/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -32,7 +32,7 @@ public class RoutineExercice {
     private int reps = 10;
 
     @Column(name = "rest_seconds")
-    private int rest = 60;
+    private int restSeconds;
 
     @Column(name = "initial_weight")
     private Double initialWeight = 0.0;
