@@ -2,6 +2,7 @@ package com.example.Aura.services;
 
 import com.example.Aura.dto.request.CreateRoutineRequestDTO;
 import com.example.Aura.dto.request.RoutineExerciseRequestDTO;
+import com.example.Aura.dto.response.UserRoutinesDTO;
 import com.example.Aura.model.*;
 import com.example.Aura.model.ComposesID.RoutineExerciceID;
 import com.example.Aura.repository.ExerciseRepository;
@@ -12,11 +13,13 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoutineService {
 
     @Autowired
-    UserService service;
+    UserService userService;
 
     @Autowired
     PhysicalProfileRepository physicalProfileRepository;
@@ -33,7 +36,7 @@ public class RoutineService {
     @Transactional
     public void createRoutine(CreateRoutineRequestDTO requestDTO){
 
-        AppUser creator = service.getAuthenticatedUser();
+        AppUser creator = userService.getAuthenticatedUser();
         PhysicalProfile profile = physicalProfileRepository.findByAppUser(creator).orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
 
         Routine routine = new Routine();
@@ -64,6 +67,21 @@ public class RoutineService {
             routineExerciseRepo.save(re);
 
         }
+
+    }
+
+    public List<UserRoutinesDTO> getRoutinesByUser(){
+
+        AppUser user = userService.getAuthenticatedUser();
+        List<Routine> routines = routineRepo.getRoutinesByCreator_Id(user.getId());
+
+        return routines.stream().map(routine -> {
+           UserRoutinesDTO dto = new UserRoutinesDTO();
+           dto.setId(routine.getId());
+           dto.setName(routine.getName());
+           dto.setDesc(routine.getDescription());
+           return dto;
+        }).toList();
 
     }
 
