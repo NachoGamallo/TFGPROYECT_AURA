@@ -54,6 +54,7 @@ public class TrainingSessionService {
 
             WorkoutExerciseResponseDTO exDTO = new WorkoutExerciseResponseDTO();
             exDTO.setExerciseId(re.getExercise().getId());
+            exDTO.setExerciseImg(re.getExercise().getImageURL());
             exDTO.setExerciseName(re.getExercise().getName());
             exDTO.setPosition(re.getPosition());
             exDTO.setRestTime(re.getRestSeconds());

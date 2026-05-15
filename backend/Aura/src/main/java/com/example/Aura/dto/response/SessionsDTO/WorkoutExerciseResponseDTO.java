@@ -12,6 +12,7 @@ public class WorkoutExerciseResponseDTO {
     private String exerciseName;
     private int position;
     private int restTime;
+    private String exerciseImg;
 
     private List<WorkoutSetResponseDTO> sets;
 

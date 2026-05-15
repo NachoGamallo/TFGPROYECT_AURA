@@ -76,11 +76,11 @@ public class RoutineService {
         List<Routine> routines = routineRepo.getRoutinesByCreator_Id(user.getId());
 
         return routines.stream().map(routine -> {
-           UserRoutinesDTO dto = new UserRoutinesDTO();
-           dto.setId(routine.getId());
-           dto.setName(routine.getName());
-           dto.setDesc(routine.getDescription());
-           return dto;
+            UserRoutinesDTO dto = new UserRoutinesDTO();
+            dto.setId(routine.getId());
+            dto.setName(routine.getName());
+            dto.setDesc(routine.getDescription());
+            return dto;
         }).toList();
 
     }
