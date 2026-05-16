@@ -52,11 +52,11 @@ public class UserService {
         //Datos temporales (Aun no esta implementado porque no tenemos los modulos de Entreno/Dieta).
         // TODO: Hacer queries a FoodRecordRepo, TrainingSessionRepo, etc.
 
-        response.setConsumedCaloriesToday(0);
+        response.setConsumedCaloriesToday(0); //No lo haremos por ahora
         response.setTrainingMinutesToday(0);
         response.setCompletedWorkOuts(0);
-        response.setBurnedCalories(0);
-        response.setUnlockedAchievements(0);
+        response.setBurnedCalories(0); // No lo hare por ahora
+        response.setUnlockedAchievements(0); //No lo hare por ahora
 
         return response;
 

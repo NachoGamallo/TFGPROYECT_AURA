@@ -35,7 +35,8 @@ public class WorkoutController {
     @PostMapping("/finish")
     public ResponseEntity<String> finishWorkout(@RequestBody SaveTrainingSessionRequestDTO requestDTO){
 
-        
+        trainingSessionService.saveCompletedSession(requestDTO);
+        return ResponseEntity.ok("Training session saved");
 
     }
 

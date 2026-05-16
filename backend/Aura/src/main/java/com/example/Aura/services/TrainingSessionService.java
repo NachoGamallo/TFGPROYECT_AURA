@@ -54,6 +54,7 @@ public class TrainingSessionService {
 
             WorkoutExerciseResponseDTO exDTO = new WorkoutExerciseResponseDTO();
             exDTO.setExerciseId(re.getExercise().getId());
+            exDTO.setExerciseImg(re.getExercise().getImageURL());
             exDTO.setExerciseName(re.getExercise().getName());
             exDTO.setPosition(re.getPosition());
             exDTO.setRestTime(re.getRestSeconds());
@@ -65,6 +66,7 @@ public class TrainingSessionService {
 
                 WorkoutSetResponseDTO setDTO = new WorkoutSetResponseDTO();
                 setDTO.setSetNumber(i);
+                setDTO.setId(i);
 
                 //We search if in the last sesion it made this especific serie in this exercise.
                 int finalI = i;
@@ -110,7 +112,7 @@ public class TrainingSessionService {
         TrainingSession newSession = new TrainingSession();
         newSession.setUser(user);
         newSession.setRoutine(routine);
-        newSession.setDurationMinutes(Math.toIntExact(requestDTO.getDurationSeconds() / 60));
+        newSession.setDurationMinutes(Math.toIntExact(requestDTO.getDurationSeconds() / 1000 / 60));
 
         newSession = trainingSessionRepo.save(newSession);
 
