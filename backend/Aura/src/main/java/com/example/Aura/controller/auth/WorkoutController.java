@@ -32,7 +32,11 @@ public class WorkoutController {
 
     }
 
-    //@PostMapping("/finish")
-    //public ResponseEntity<String> finishWorkout(@RequestBody SaveTrainingSessionRequestDTO requestDTO){}
+    @PostMapping("/finish")
+    public ResponseEntity<String> finishWorkout(@RequestBody SaveTrainingSessionRequestDTO requestDTO){
+
+        
+
+    }
 
 }

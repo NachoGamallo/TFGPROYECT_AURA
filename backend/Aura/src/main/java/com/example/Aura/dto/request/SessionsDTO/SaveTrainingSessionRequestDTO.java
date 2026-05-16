@@ -9,7 +9,7 @@ import java.util.UUID;
 public class SaveTrainingSessionRequestDTO {
 
     private UUID routineId;
-    private Long durationSeconds;
+    private int durationSeconds;
     List<SaveExercisesRecordRequestDTO> exercises;
 
 }
