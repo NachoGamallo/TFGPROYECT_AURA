@@ -2,6 +2,8 @@ package com.example.Aura.dto.response;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class HomeResponseDTO {
 
@@ -17,5 +19,7 @@ public class HomeResponseDTO {
     private int burnedCalories; //Quitar o adaptar
     private Double currentWeight;
     private int unlockedAchievements;
+
+    private List<SessionMaxWeightResponseDTO> bodyRecordInfoResponseDTOS;
 
 }

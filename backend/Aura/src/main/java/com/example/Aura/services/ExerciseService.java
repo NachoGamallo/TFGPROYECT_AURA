@@ -1,10 +1,14 @@
 package com.example.Aura.services;
 
 import com.example.Aura.dto.response.ExerciseDetailsDTO;
+import com.example.Aura.dto.response.ExerciseReportResponseDTO;
 import com.example.Aura.dto.response.ExerciseSummaryDTO;
+import com.example.Aura.dto.response.SessionMaxWeightResponseDTO;
+import com.example.Aura.model.AppUser;
 import com.example.Aura.model.Enums.ExerciseType;
 import com.example.Aura.model.Exercise;
 import com.example.Aura.model.ExerciseMuscle;
+import com.example.Aura.repository.ExerciseRecordRepository;
 import com.example.Aura.repository.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +20,9 @@ import java.util.stream.Collectors;
 @Service
 public class ExerciseService {
 
-    @Autowired
-    private ExerciseRepository exerciseRepo;
+    @Autowired private ExerciseRepository exerciseRepo;
+    @Autowired private ExerciseRecordRepository exerciseRecordRepo;
+    @Autowired private UserService userService;
 
     //Para la lista general de ejercicios.
     public List<ExerciseSummaryDTO> getAllExercises() {
@@ -79,6 +84,22 @@ public class ExerciseService {
                 .collect(Collectors.toList()));
 
         return dto;
+    }
+
+    public ExerciseReportResponseDTO getExerciseMaxWeightReport(UUID exerciseId){
+
+        AppUser user = userService.getAuthenticatedUser();
+
+        ExerciseReportResponseDTO report = new ExerciseReportResponseDTO();
+
+        Double maxHistorical = exerciseRecordRepo.findHistoricalMaxWeight(exerciseId,user.getId());
+        report.setHistoricalMaxWeight(maxHistorical != null ? maxHistorical : 0.0);
+
+        List<SessionMaxWeightResponseDTO> sessions = exerciseRecordRepo.findMaxWeightPerSession(exerciseId, user.getId());
+        report.setSessionRecords(sessions);
+
+        return report;
+
     }
 
 }

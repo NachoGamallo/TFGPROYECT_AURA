@@ -5,34 +5,35 @@ import com.example.Aura.dto.request.ChangeUserImageRequestDTO;
 import com.example.Aura.dto.request.ChangeUserNameRequestDTO;
 import com.example.Aura.dto.request.ChangeUserPasswordRequestDTO;
 import com.example.Aura.dto.response.HomeResponseDTO;
+import com.example.Aura.dto.response.SessionMaxWeightResponseDTO;
 import com.example.Aura.dto.response.UserDataDTO;
 import com.example.Aura.model.AppUser;
+import com.example.Aura.model.BodyRecord;
 import com.example.Aura.model.NutritionPlan;
 import com.example.Aura.model.PhysicalProfile;
-import com.example.Aura.repository.NutritionPlanRepository;
-import com.example.Aura.repository.PhysicalProfileRepository;
-import com.example.Aura.repository.UserRepository;
+import com.example.Aura.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private PhysicalProfileRepository physicalProfileRepo;
-
-    @Autowired
-    private NutritionPlanRepository nutritionPlanRepo;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private UserRepository userRepo;
+    @Autowired private PhysicalProfileRepository physicalProfileRepo;
+    @Autowired private NutritionPlanRepository nutritionPlanRepo;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private BodyRecordsRepository bodyRecordRepo;
+    @Autowired private TrainingSessionRepository trainingSessionRepo;
 
     public HomeResponseDTO getHomeData(String email){
 
@@ -47,14 +48,47 @@ public class UserService {
         //Datos reales.
         response.setUserName(user.getName());
         response.setTargetCalories(plan.getCalories());
-        response.setCurrentWeight(profile.getInitialWeight());
 
-        //Datos temporales (Aun no esta implementado porque no tenemos los modulos de Entreno/Dieta).
-        // TODO: Hacer queries a FoodRecordRepo, TrainingSessionRepo, etc.
+        List<BodyRecord>bodyRecords = bodyRecordRepo.findByUserIdOrderByCreatedAtAsc(user.getId());
+
+        //Tiempo de entreno hoy.
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+
+        Integer totalMinutesToday = trainingSessionRepo.sumDurationMinutesByUserAndCreatedAtBetween(user,startOfDay,endOfDay);
+        response.setTrainingMinutesToday(totalMinutesToday != null ? totalMinutesToday : 0);
+
+        //Numero de entrenos de la semana.
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).atStartOfDay();
+        LocalDateTime endOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).atTime(LocalTime.MAX);
+
+        long workoutsThisWeek = trainingSessionRepo.countByUserAndCreatedAtBetween(user,startOfWeek,endOfWeek);
+        response.setCompletedWorkOuts(Math.toIntExact(workoutsThisWeek));
+
+        if (!bodyRecords.isEmpty()){
+
+            response.setCurrentWeight(bodyRecords.get(bodyRecords.size() - 1).getWeight());
+
+        } else {
+
+            response.setCurrentWeight(profile.getInitialWeight());
+
+        }
+
+        List<SessionMaxWeightResponseDTO> historyDTO = bodyRecords.stream().map(record -> {
+
+            SessionMaxWeightResponseDTO dto = new SessionMaxWeightResponseDTO();
+            dto.setSessionDate(record.getCreatedAt());
+            dto.setMaxWeight(record.getWeight());
+            return dto;
+
+        }).toList();
+
+        response.setBodyRecordInfoResponseDTOS(historyDTO);
 
         response.setConsumedCaloriesToday(0); //No lo haremos por ahora
         response.setTrainingMinutesToday(0);
-        response.setCompletedWorkOuts(0);
         response.setBurnedCalories(0); // No lo hare por ahora
         response.setUnlockedAchievements(0); //No lo hare por ahora
 

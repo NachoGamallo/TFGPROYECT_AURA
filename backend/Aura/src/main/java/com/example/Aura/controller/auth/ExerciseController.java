@@ -1,9 +1,11 @@
 package com.example.Aura.controller.auth;
 
 import com.example.Aura.dto.response.ExerciseDetailsDTO;
+import com.example.Aura.dto.response.ExerciseReportResponseDTO;
 import com.example.Aura.dto.response.ExerciseSummaryDTO;
 import com.example.Aura.services.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +30,13 @@ public class ExerciseController {
     public ExerciseDetailsDTO getDetails(@PathVariable UUID id){
 
         return exerciseService.getExerciseDetailsById(id);
+
+    }
+
+    @GetMapping("/{id}/report")
+    public ResponseEntity<ExerciseReportResponseDTO> getExerciseReport(@PathVariable UUID id){
+
+        return ResponseEntity.ok(exerciseService.getExerciseMaxWeightReport(id));
 
     }
 
