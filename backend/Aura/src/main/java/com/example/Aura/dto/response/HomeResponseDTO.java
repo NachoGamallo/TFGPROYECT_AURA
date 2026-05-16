@@ -7,8 +7,6 @@ import java.util.List;
 @Data
 public class HomeResponseDTO {
 
-    private String userName;
-
     //Info principal card
     private int targetCalories;
     private int consumedCaloriesToday; //Quitar
@@ -20,6 +18,6 @@ public class HomeResponseDTO {
     private Double currentWeight;
     private int unlockedAchievements;
 
-    private List<SessionMaxWeightResponseDTO> bodyRecordInfoResponseDTOS;
+    private List<BodyRecordResponseDTO> bodyRecordInfoResponseDTOS;
 
 }

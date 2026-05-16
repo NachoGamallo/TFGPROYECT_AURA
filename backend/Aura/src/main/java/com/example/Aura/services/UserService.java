@@ -4,6 +4,7 @@ import com.example.Aura.dto.request.ChangeUserEmailRequestDTO;
 import com.example.Aura.dto.request.ChangeUserImageRequestDTO;
 import com.example.Aura.dto.request.ChangeUserNameRequestDTO;
 import com.example.Aura.dto.request.ChangeUserPasswordRequestDTO;
+import com.example.Aura.dto.response.BodyRecordResponseDTO;
 import com.example.Aura.dto.response.HomeResponseDTO;
 import com.example.Aura.dto.response.SessionMaxWeightResponseDTO;
 import com.example.Aura.dto.response.UserDataDTO;
@@ -38,7 +39,7 @@ public class UserService {
     public HomeResponseDTO getHomeData(String email){
 
         //Buscamos el usuario y sus datos.
-        AppUser user = userRepo.findAppUserByEmail(email).orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
+        AppUser user = getAuthenticatedUser();
         PhysicalProfile profile = physicalProfileRepo.findByAppUser(user).orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
         NutritionPlan plan = nutritionPlanRepo.findByAppUserAndIsActiveTrue(user).orElseThrow(() -> new RuntimeException("Plan nutricional no encontrado"));
 
@@ -46,7 +47,6 @@ public class UserService {
         HomeResponseDTO response = new HomeResponseDTO();
 
         //Datos reales.
-        response.setUserName(user.getName());
         response.setTargetCalories(plan.getCalories());
 
         List<BodyRecord>bodyRecords = bodyRecordRepo.findByUserIdOrderByCreatedAtAsc(user.getId());
@@ -76,11 +76,11 @@ public class UserService {
 
         }
 
-        List<SessionMaxWeightResponseDTO> historyDTO = bodyRecords.stream().map(record -> {
+        List<BodyRecordResponseDTO> historyDTO = bodyRecords.stream().map(record -> {
 
-            SessionMaxWeightResponseDTO dto = new SessionMaxWeightResponseDTO();
-            dto.setSessionDate(record.getCreatedAt());
-            dto.setMaxWeight(record.getWeight());
+            BodyRecordResponseDTO dto = new BodyRecordResponseDTO();
+            dto.setRecordDate(record.getCreatedAt());
+            dto.setWeight(record.getWeight());
             return dto;
 
         }).toList();
@@ -88,7 +88,6 @@ public class UserService {
         response.setBodyRecordInfoResponseDTOS(historyDTO);
 
         response.setConsumedCaloriesToday(0); //No lo haremos por ahora
-        response.setTrainingMinutesToday(0);
         response.setBurnedCalories(0); // No lo hare por ahora
         response.setUnlockedAchievements(0); //No lo hare por ahora
 

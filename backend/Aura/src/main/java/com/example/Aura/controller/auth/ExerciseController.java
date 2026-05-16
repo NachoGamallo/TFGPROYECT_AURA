@@ -39,5 +39,4 @@ public class ExerciseController {
         return ResponseEntity.ok(exerciseService.getExerciseMaxWeightReport(id));
 
     }
-
 }

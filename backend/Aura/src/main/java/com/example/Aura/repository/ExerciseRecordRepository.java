@@ -19,11 +19,11 @@ public interface ExerciseRecordRepository extends JpaRepository<ExerciseRecord, 
     Double findHistoricalMaxWeight(@Param("exerciseId") UUID exerciseId, @Param("userId") UUID userId);
 
     // 2. Obtener el peso máximo por sesión/día para un ejercicio.
-    @Query("SELECT new com.example.Aura.dto.response.SessionMaxWeightResponseDTO(CAST(er.session.createdAt AS localdate), MAX(er.weight)) " +
+    @Query("SELECT new com.example.Aura.dto.response.SessionMaxWeightResponseDTO(CAST(er.session.createdAt AS localdatetime), MAX(er.weight)) " +
             "FROM ExerciseRecord er " +
             "WHERE er.exercise.id = :exerciseId AND er.session.user.id = :userId " +
-            "GROUP BY CAST(er.session.createdAt AS localdate) " +
-            "ORDER BY CAST(er.session.createdAt AS localdate) ASC")
+            "GROUP BY CAST(er.session.createdAt AS localdatetime) " +
+            "ORDER BY CAST(er.session.createdAt AS localdatetime) ASC")
     List<SessionMaxWeightResponseDTO> findMaxWeightPerSession(@Param("exerciseId") UUID exerciseId, @Param("userId") UUID userId);
 
 }

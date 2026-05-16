@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class SessionMaxWeightResponseDTO {
+public class BodyRecordResponseDTO {
 
-    private LocalDateTime sessionDate;
-    private Double maxWeight;
+    private LocalDateTime recordDate;
+    private Double weight;
 
 }

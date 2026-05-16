@@ -18,7 +18,7 @@ public class BodyRecord {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "id_user")
     private AppUser user;
 
     @Column(name = "weight_kg", nullable = false)
