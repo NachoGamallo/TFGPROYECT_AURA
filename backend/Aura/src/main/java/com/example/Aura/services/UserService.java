@@ -1,9 +1,6 @@
 package com.example.Aura.services;
 
-import com.example.Aura.dto.request.ChangeUserEmailRequestDTO;
-import com.example.Aura.dto.request.ChangeUserImageRequestDTO;
-import com.example.Aura.dto.request.ChangeUserNameRequestDTO;
-import com.example.Aura.dto.request.ChangeUserPasswordRequestDTO;
+import com.example.Aura.dto.request.*;
 import com.example.Aura.dto.response.BodyRecordResponseDTO;
 import com.example.Aura.dto.response.HomeResponseDTO;
 import com.example.Aura.dto.response.SessionMaxWeightResponseDTO;
@@ -175,6 +172,25 @@ public class UserService {
         //1. We mark the user as delete (deleted_at)
         user.setDeletedAt(LocalDateTime.now());
         userRepo.save(user);
+
+    }
+
+    public void createdBodyRecord(CreateBodyRecordRequestDTO requestDTO){
+
+        AppUser user = getAuthenticatedUser();
+
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay(); // Hoy a las 00:00:00
+        LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX); // Hoy a las 23:59:59
+
+        boolean alreadyRecordedToday = bodyRecordRepo.existsBodyRecordByUser_IdAndCreatedAtBetween(user.getId(),startOfDay,endOfDay);
+
+        if (alreadyRecordedToday) throw new RuntimeException("Ya has registrado tu peso hoy");
+
+        BodyRecord bodyRecord = new BodyRecord();
+        bodyRecord.setUser(user);
+        bodyRecord.setWeight(requestDTO.getWeight());
+
+        bodyRecordRepo.save(bodyRecord);
 
     }
 

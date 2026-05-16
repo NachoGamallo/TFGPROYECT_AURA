@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/exercises", "/api/exercises/**").permitAll()
                         .requestMatchers("/api/routines/" , "/api/routines/**").permitAll()
                         .requestMatchers("/api/workout/" , "/api/workout/**").permitAll()
+                        .requestMatchers("/api/record","/api/record/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

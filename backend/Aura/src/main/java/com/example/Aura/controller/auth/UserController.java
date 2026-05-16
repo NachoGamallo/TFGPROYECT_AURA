@@ -1,9 +1,6 @@
 package com.example.Aura.controller.auth;
 
-import com.example.Aura.dto.request.ChangeUserEmailRequestDTO;
-import com.example.Aura.dto.request.ChangeUserImageRequestDTO;
-import com.example.Aura.dto.request.ChangeUserNameRequestDTO;
-import com.example.Aura.dto.request.ChangeUserPasswordRequestDTO;
+import com.example.Aura.dto.request.*;
 import com.example.Aura.dto.response.HomeResponseDTO;
 import com.example.Aura.dto.response.UserDataDTO;
 import com.example.Aura.services.UserService;
@@ -11,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -67,6 +66,21 @@ public class UserController {
     public ResponseEntity<String> deleteUser(){
         userService.deleteUser();
         return ResponseEntity.ok("Usuario eliminado correctamente");
+    }
+
+    @PostMapping("/body-record")
+    public ResponseEntity<Map<String,String>> createBodyRecord(@RequestBody CreateBodyRecordRequestDTO request){
+
+        try {
+            userService.createdBodyRecord(request);
+            return ResponseEntity.ok(Map.of("message", "Peso registrado correctamente."));
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+
+        }
+
     }
 
 }
